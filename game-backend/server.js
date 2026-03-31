@@ -3,6 +3,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+const gameRoutes = require("./routes/gameRoutes");
+app.use("/game", gameRoutes);
+
 const connectDB = require("./config/db");
 const app = express();
 connectDB();
