@@ -9,21 +9,23 @@ A scalable and modular backend system built using **Node.js, Express, and MongoD
 
 ---
 
-## 📌 Overview
+# 📌 Overview
 
-This project provides a clean and extensible backend architecture for game development, supporting:
+This project provides a clean and extensible backend architecture for game development.
 
-* 🔐 User authentication (Google login - basic)
+### Features:
+
+* 🔐 User authentication (Google Login - Basic)
 * 💰 In-game currency system (coins)
-* 🎒 Inventory and owned items
-* 🛒 Purchase transactions & history
-* 🎥 Reward-based ads system
+* 🎒 Inventory & owned items (planned)
+* 🛒 Purchase system & history (planned)
+* 🎥 Reward-based ads system (planned)
 * 🧠 Player progression (level & stamina)
-* 💳 Subscription management
+* 💳 Subscription system (planned)
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
 | Layer        | Technology             |
 | ------------ | ---------------------- |
@@ -34,7 +36,7 @@ This project provides a clean and extensible backend architecture for game devel
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```
 game-backend/
@@ -43,198 +45,231 @@ game-backend/
 │   └── db.js
 │
 ├── models/
-│   ├── User.js
-│   └── Purchase.js
+│   └── User.js
 │
 ├── controllers/
 │   ├── authController.js
-│   ├── userController.js
-│   ├── coinController.js
-│   ├── purchaseController.js
-│   └── adController.js
+│   └── gameController.js
 │
 ├── routes/
 │   ├── authRoutes.js
-│   ├── userRoutes.js
-│   ├── coinRoutes.js
-│   ├── purchaseRoutes.js
-│   └── adRoutes.js
+│   └── gameRoutes.js
 │
+├── middleware/
+│   └── authMiddleware.js   (JWT - upcoming)
+│
+├── services/
+│   ├── providerService.js
+│   └── jwtService.js       (upcoming)
+│
+├── test-login.html
 ├── server.js
 └── package.json
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+# ⚙️ Installation & Setup
 
-### 1. Clone Repository
+## 1. Clone Repository
 
 ```
 git clone <your-repository-url>
 cd game-backend
 ```
 
-### 2. Install Dependencies
+---
+
+## 2. Install Dependencies
 
 ```
 npm install
 ```
 
-### 3. Environment Setup
+---
 
-Create a `.env` file in the root directory:
+## 3. Environment Setup
+
+Create a `.env` file:
 
 ```
-PORT=3000
-MONGO_URI=mongodb://127.0.0.1:27017/gameDB
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
 ---
 
-### 4. Start Server
+## 4. Start Server
 
 ```
 node server.js
 ```
 
-Server runs at:
+---
+
+## 🌐 Server URL
 
 ```
-http://localhost:3000
+http://localhost:5000
+```
+
+Or (Codespaces):
+
+```
+https://your-project-5000.app.github.dev
 ```
 
 ---
 
-## 📡 API Endpoints
+# 🔐 Authentication
 
-### 🔐 Authentication
+## POST `/auth/social-login`
 
-**POST /auth/google**
+Login using Google OAuth (frontend sends ID token)
 
-```json
+### Request:
+
+```
 {
-  "name": "VivekJoshi",
-  "email": "vivekjoshi@gmail.com",
-  "googleId": "123"
+  "provider": "google",
+  "token": "GOOGLE_ID_TOKEN"
 }
 ```
 
-#### ✅ Response
+### Response:
 
-```json
+```
 {
-  "_id": "USER_ID",
-  "name": "VivekJoshi",
+  "session_token": "JWT_TOKEN",
+  "user_id": "USER_ID"
+}
+```
+
+---
+
+# 🎮 Game APIs
+
+## 👤 Get Profile
+
+```
+GET /game/profile
+```
+
+### Headers:
+
+```
+Authorization: JWT_TOKEN
+```
+
+### Response:
+
+```
+{
+  "username": "Vivek",
+  "email": "vivek@gmail.com",
   "coins": 0,
-  "level": 1
+  "level": 1,
+  "stamina": 100
 }
 ```
 
 ---
 
-### 👤 User
+## 💰 Add Coins
 
-**GET /user/:id**
+```
+POST /game/add-coins
+```
 
-Fetch user profile data.
-
----
-
-### 💰 Coins System
-
-**POST /coin/add**
-
-```json
+```
 {
-  "userId": "USER_ID",
-  "coins": 100
+  "amount": 100
 }
 ```
 
 ---
 
-### 🛒 Purchase System
+## ⚡ Use Stamina
 
-**POST /purchase/buy**
+```
+POST /game/use-stamina
+```
 
-```json
+```
 {
-  "userId": "USER_ID",
-  "item": "Sword",
-  "cost": 50
+  "amount": 10
 }
 ```
 
 ---
 
-### 🎥 Ads Reward
-
-**POST /ads/reward**
-
-```json
-{
-  "userId": "USER_ID"
-}
-```
-
----
-
-## 🧪 Testing
+# 🧪 Testing
 
 You can test APIs using:
 
 * Postman
-* Thunder Client (VS Code Extension)
+* Thunder Client (VS Code)
+* Browser (for login UI)
 
 ---
 
-## 🔐 Environment Variables
+# 🔐 Environment Variables
 
-| Variable  | Description            |
-| --------- | ---------------------- |
-| PORT      | Server port            |
-| MONGO_URI | MongoDB connection URL |
-
----
-
-## ⚠️ Limitations (Current Version)
-
-This project is currently a **learning/prototype backend**, and does not yet include:
-
-* ❌ JWT Authentication (secure login)
-* ❌ Input validation & sanitization
-* ❌ Role-based access control
-* ❌ Rate limiting / anti-cheat system
+| Variable         | Description               |
+| ---------------- | ------------------------- |
+| PORT             | Server port               |
+| MONGO_URI        | MongoDB connection string |
+| JWT_SECRET       | Secret for JWT            |
+| GOOGLE_CLIENT_ID | Google OAuth Client ID    |
 
 ---
 
-## 🚀 Future Enhancements
+# ⚠️ Limitations (Current Version)
 
-* 🔐 JWT Authentication & Authorization
-* 🌐 Google, Facebook & Play Games OAuth
-* 🏆 Leaderboard System
+This project is still under development:
+
+* ❌ JWT Authentication fully implemented (in progress)
+* ❌ Facebook / Play Games login
+* ❌ Inventory system
+* ❌ Purchase system
+* ❌ Ads reward system
+* ❌ Input validation
+* ❌ Security hardening
+
+---
+
+# 🚀 Future Enhancements
+
+* 🔐 Full JWT Authentication & Authorization
+* 🌐 Multi-provider login (Google, Facebook, Play Games)
+* 🎒 Inventory system
+* 🛒 Shop & purchases
+* 🎥 Ads reward system
+* 🏆 Leaderboard
 * ⚡ Real-time multiplayer (Socket.io)
-* ☁️ Cloud deployment (AWS / Docker)
-* 🛡️ Security improvements
+* ☁️ Deployment (AWS / Docker)
+* 🛡️ Anti-cheat & rate limiting
 
 ---
 
-## 💡 Key Highlights
+# 💡 Key Highlights
 
-* Clean and modular MVC architecture
-* Scalable and maintainable structure
-* Beginner-friendly yet production-inspired design
-* Easy to extend for real-world applications
+* Clean MVC architecture
+* Beginner-friendly structure
+* Scalable backend design
+* Real game-ready foundation
+* Easy to extend & maintain
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Vivek Joshi**
 
 ---
 
-## 📄 License
+# 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
